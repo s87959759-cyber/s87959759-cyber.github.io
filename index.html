@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Finova — Personal Finance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="on-dashboard">
+  <div class="splash active" id="splash">
+    <div class="splash-logo"><i data-lucide="wallet-cards"></i></div>
+    <h2>Finova</h2>
+    <div class="spinner"></div>
+    <p id="splashText">Loading Finova...</p>
+  </div>
+
+
+  <!-- ================= Modern Login & Sign In Screen ================= -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-panel">
+
+      <!-- LEFT: Brand + Feature list -->
+      <div class="auth-panel-left">
+        <div class="auth-panel-brand">
+          <div class="auth-panel-logo"><i data-lucide="wallet-cards"></i></div>
+          <div>
+            <div class="auth-panel-name">Finova</div>
+            <div class="auth-panel-tag">PRIVATE FINANCE</div>
+          </div>
+        </div>
+        <h2 class="auth-panel-headline">Master your wealth in total privacy</h2>
+        <p class="auth-panel-sub">Private financial analytics with offline-first client encryption, automated bill &amp; subscription cadence detection, and zero tracking.</p>
+        <ul class="auth-feature-list">
+          <li>
+            <span class="auth-feature-icon"><i data-lucide="shield-check"></i></span>
+            <div>
+              <strong>100% Client-Side Privacy</strong>
+              <span>All transactions &amp; vaults stay encrypted locally on your device.</span>
+            </div>
+          </li>
+          <li>
+            <span class="auth-feature-icon"><i data-lucide="zap"></i></span>
+            <div>
+              <strong>Smart Cadence Detection</strong>
+              <span>Automatic pattern recognition for recurring payments &amp; subscriptions.</span>
+            </div>
+          </li>
+          <li>
+            <span class="auth-feature-icon"><i data-lucide="pie-chart"></i></span>
+            <div>
+              <strong>Budget Health &amp; Net Worth</strong>
+              <span>Real-time category limits, savings targets, and net worth configuration.</span>
+            </div>
+          </li>
+        </ul>
+        <div class="auth-panel-footer-note">
+          <i data-lucide="lock"></i>
+          <span>AES-256 Client Storage &bull; Zero Third-Party Tracking</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Auth forms -->
+      <div class="auth-panel-right">
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" id="tabBtnSignIn">
+            <i data-lucide="log-in"></i>
+            <span>Sign In</span>
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabBtnSignUp">
+            <i data-lucide="user-plus"></i>
+            <span>Create Account</span>
+          </button>
+        </div>
+
+        <!-- Form 1: Sign In -->
+        <form class="auth-form" id="formAuthSignIn" autocomplete="on">
+          <h3 class="auth-form-title">Welcome back</h3>
+          <p class="auth-form-desc">Enter your credentials to access your private dashboard</p>
+          <div class="form-group mb-3">
+            <label for="authLoginUser">Gmail</label>
+            <div class="input-icon-wrap">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="text" id="authLoginUser" class="form-control" placeholder="you@gmail.com" required autocomplete="username">
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="authLoginPass">Password</label>
+            <div class="input-icon-wrap">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="authLoginPass" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+              <button type="button" class="input-icon-btn" id="btnToggleLoginPass" title="Toggle password visibility">
+                <i data-lucide="eye"></i>
+              </button>
+            </div>
+          </div>
+          <p class="auth-error text-danger" id="authLoginError"></p>
+          <button type="submit" class="btn btn-primary w-100 btn-lg mb-3 auth-submit-btn">
+            <span>Sign in to Dashboard</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+<div class="auth-divider"><span>or</span></div>
+          <button type="button" class="btn btn-secondary w-100 mb-3" id="btnAuthToSwitch">
+            <i data-lucide="users"></i>
+            <span>Switch Saved Accounts</span>
+          </button>
+          <div class="auth-footer-link">
+            <span class="text-muted">Don't have an account? </span>
+            <a href="#" id="linkGoToSignUpFromIn" class="text-purple">Create an account</a>
+          </div>
+        </form>
+
+        <!-- Form 2: Create Account -->
+        <form class="auth-form" id="formAuthSignUp" style="display:none;" autocomplete="off">
+          <h3 class="auth-form-title">Create account</h3>
+          <p class="auth-form-desc">Set up a new private financial profile</p>
+          <div class="form-group mb-3">
+            <label for="authRegisterEmail">Gmail</label>
+            <div class="input-icon-wrap"><i data-lucide="mail" class="input-icon"></i>
+              <input type="email" id="authRegisterEmail" class="form-control" placeholder="name@gmail.com" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="authRegisterUser">Account Name</label>
+            <div class="input-icon-wrap">
+              <i data-lucide="user" class="input-icon"></i>
+              <input type="text" id="authRegisterUser" class="form-control" placeholder="e.g. Marco, Personal" required maxlength="24">
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="authRegisterPass">Password</label>
+            <div class="input-icon-wrap">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" id="authRegisterPass" class="form-control" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
+              <button type="button" class="input-icon-btn" id="btnToggleRegisterPass" title="Toggle password visibility">
+                <i data-lucide="eye"></i>
+              </button>
+            </div>
+          </div>
+          <p class="auth-error text-danger" id="authRegisterError"></p>
+          <button type="submit" class="btn btn-primary w-100 btn-lg mb-3 auth-submit-btn">
+            <i data-lucide="user-check"></i>
+            <span>Create &amp; Sign In</span>
+          </button>
+          <div class="auth-footer-link">
+            <span class="text-muted">Already have an account? </span>
+            <a href="#" id="linkGoToSignIn" class="text-purple">Sign In</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Switch Account Picker Screen (Old UI) ================= -->
+  <div class="account-screen" id="accountScreen">
+    <div class="account-wrap">
+      <div class="account-header-row">
+        <button type="button" class="btn btn-ghost btn-sm" id="btnBackFromSwitch">
+          <i data-lucide="arrow-left"></i>
+          <span id="btnBackFromSwitchText">Back</span>
+        </button>
+      </div>
+      <h2>Switch Account</h2>
+      <p class="text-muted">Choose an account profile to continue</p>
+      <div class="account-grid" id="accountGrid"></div>
+      <form class="account-add-form" id="formAddAccount" style="display:none;">
+        <input type="text" id="newAccName" placeholder="Account name" required maxlength="24">
+        <input type="password" id="newAccPass" placeholder="Password (min 6 chars)" required minlength="6" autocomplete="new-password">
+        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="btnCancelAddAccount">Cancel</button>
+      </form>
+      <div class="account-screen-footer">
+        <button type="button" class="btn btn-ghost btn-sm" id="btnSwitchToSignIn">
+          <i data-lucide="log-in"></i>
+          <span>Go to Sign In page</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-brand">
+      <div class="splash-logo"><i data-lucide="wallet-cards"></i></div>
+      <h2>Finova</h2>
+    </div>
+    <form class="login-card" id="formLogin" autocomplete="off">
+      <div class="login-row">
+        <label for="loginUser">Username:</label>
+        <input type="text" id="loginUser" readonly>
+      </div>
+      <div class="login-row">
+        <label for="loginPass">Password:</label>
+        <input type="password" id="loginPass" required autocomplete="current-password">
+      </div>
+      <p class="login-error" id="loginError"></p>
+      <div class="login-actions">
+        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="button" class="btn btn-secondary" id="btnLoginCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <div class="app-layout">
+    <!-- Desktop Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <i data-lucide="wallet-cards"></i>
+        </div>
+        <div class="brand-info">
+          <span class="brand-title">Finova</span>
+          <span class="brand-tag">Private Finance</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- User Navigation Items -->
+        <button class="nav-item active" data-tab="dashboard" data-user-only>
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="transactions" data-user-only>
+          <i data-lucide="arrow-left-right"></i>
+          <span>Transactions</span>
+        </button>
+        <button class="nav-item" data-tab="recurring" data-user-only>
+          <i data-lucide="calendar-clock"></i>
+          <span>Recurring</span>
+        </button>
+        <button class="nav-item" data-tab="subscriptions" data-user-only>
+          <i data-lucide="repeat"></i>
+          <span>Subscriptions</span>
+        </button>
+        <button class="nav-item" data-tab="budgets" data-user-only>
+          <i data-lucide="pie-chart"></i>
+          <span>Budgets</span>
+        </button>
+        <button class="nav-item" data-tab="goals" data-user-only>
+          <i data-lucide="target"></i>
+          <span>Goals</span>
+        </button>
+
+        <!-- Admin Navigation Items -->
+        <button class="nav-item" data-tab="admin-dashboard" data-admin-only>
+          <i data-lucide="shield-check"></i>
+          <span>Admin Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="admin-users" data-admin-only>
+          <i data-lucide="users"></i>
+          <span>User Management</span>
+        </button>
+        <button class="nav-item" data-tab="admin-budgets" data-admin-only>
+          <i data-lucide="piggy-bank"></i>
+          <span>Budget Management</span>
+        </button>
+        <button class="nav-item" data-tab="admin-transactions" data-admin-only>
+          <i data-lucide="receipt"></i>
+          <span>All Transactions</span>
+        </button>
+        <button class="nav-item" data-tab="documents" data-admin-only>
+          <i data-lucide="folder-lock"></i>
+          <span>Documents</span>
+        </button>
+
+        <!-- Shared Navigation Item -->
+        <button class="nav-item" data-tab="settings">
+          <i data-lucide="sliders-horizontal"></i>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="drive-status-pill" id="sidebarDriveStatus" data-admin-only>
+          <i data-lucide="cloud"></i>
+          <div class="status-details">
+            <span class="status-name">Drive Inbox</span>
+            <span class="status-state" id="sidebarSyncLabel">8:00 AM Daily</span>
+          </div>
+        </div>
+
+        <div class="drawer-account">
+          <div class="avatar" id="drawerAvatar"></div>
+          <div class="drawer-account-info">
+            <strong id="drawerName"></strong>
+            <span class="role-badge" id="drawerRole"></span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnSwitchAccount" title="Switch account">
+            <i data-lucide="repeat-2"></i>
+            <span>Switch</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Sticky Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-menu" id="btnMenu" aria-label="Menu"><i data-lucide="menu"></i></button>
+          <div class="page-title-box">
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <span class="page-subtitle" id="pageSubtitle">Personal financial overview</span>
+          </div>
+        </div>
+
+        <!-- Dashboard-only action buttons -->
+        <div class="topbar-actions" id="topbarDashActions">
+          <!-- Demo Data Toggle Button for testing -->
+          <button class="btn btn-ghost btn-sm" id="btnDemoToggle" data-admin-only title="Load sample transactions for preview or reset to clean empty state">
+            <i data-lucide="sparkles"></i>
+            <span class="demo-btn-text">Demo Data</span>
+          </button>
+
+          <!-- Drive Sync Button -->
+          <button class="btn btn-secondary" id="btnTopDriveSync" data-admin-only>
+            <i data-lucide="refresh-cw"></i>
+            <span>Drive sync</span>
+          </button>
+
+          <!-- Import Statement / Document -->
+          <button class="btn btn-secondary" id="btnTopImport" data-admin-only>
+            <i data-lucide="file-up"></i>
+            <span>Import</span>
+          </button>
+        </div>
+
+        <!-- Always-visible top-right: Add Entry + Live Clock -->
+        <div class="topbar-right" id="topbarRight">
+          <button class="btn btn-primary" id="btnTopAddEntry" data-user-only>
+            <i data-lucide="plus"></i>
+            <span>Add entry</span>
+          </button>
+
+          <div class="topbar-live-clock" id="topbarLiveClock">
+            <i data-lucide="clock"></i>
+            <span id="topbarClockTime">--:--:--</span>
+          </div>
+        </div>
+
+        <div class="topbar-income" id="topbarIncome">
+          <span>Total Income</span>
+          <strong id="topbarIncomeValue">$0.00</strong>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content -->
+      <main class="content-container">
+        
+        <!-- ================= PAGE 1: DASHBOARD ================= -->
+        <section class="page-view active" id="view-dashboard">
+          <!-- Filter & Period Bar -->
+          <div class="period-bar-card">
+            <div class="period-label-group">
+              <i data-lucide="calendar"></i>
+              <span class="period-title">Date Period:</span>
+            </div>
+            <div class="period-selector" id="dashboardPeriodSelector">
+              <button class="period-btn active" data-period="all-time">All time</button>
+              <button class="period-btn" data-period="this-week">This week</button>
+              <button class="period-btn" data-period="this-month">This month</button>
+              <button class="period-btn" data-period="this-year">This year</button>
+            </div>
+          </div>
+
+          <!-- Real-Time Market & Exchange Rates Ticker -->
+          <div class="card live-market-card" id="liveMarketCard">
+            <div class="live-market-head">
+              <div class="live-indicator-wrap">
+                <span class="live-pulse-dot"></span>
+                <strong class="live-title">Real-time forex &amp; market rates</strong>
+                <span class="badge badge-green" id="liveMarketBadge">Live API</span>
+              </div>
+              <div class="live-market-right">
+                <span class="live-time-text" id="liveMarketTime">Auto-refresh: 60s</span>
+                <button type="button" class="btn btn-ghost btn-xs" id="btnRefreshRates" title="Refresh live rates now">
+                  <i data-lucide="refresh-cw"></i>
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+            <div class="live-ticker-track" id="liveTickerTrack">
+              <!-- Dynamically populated pairs -->
+            </div>
+          </div>
+
+          <!-- 4 Summary KPI Cards -->
+          <div class="summary-grid">
+            <!-- 1. Net Worth Card -->
+            <div class="card summary-card net-worth-card" id="cardNetWorth">
+              <div class="card-head">
+                <span class="card-label">Net Worth</span>
+                <span class="card-icon-badge violet"><i data-lucide="landmark"></i></span>
+              </div>
+              <div class="card-body">
+                <div class="metric-value-wrap">
+                  <span class="metric-value" id="kpiNetWorth">Not set</span>
+                </div>
+                <p class="metric-desc" id="kpiNetWorthDesc">Assets minus liabilities</p>
+              </div>
+              <div class="card-footer" id="kpiNetWorthFooter">
+                <button class="btn-link" id="btnConfigNetWorth">
+                  <span>Configure in Settings</span>
+                  <i data-lucide="arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. Income Card -->
+            <div class="card summary-card">
+              <div class="card-head">
+                <span class="card-label">Total Income</span>
+                <span class="card-icon-badge green"><i data-lucide="trending-up"></i></span>
+              </div>
+              <div class="card-body">
+                <div class="metric-value-wrap">
+                  <span class="metric-value text-green" id="kpiIncome">$0.00</span>
+                </div>
+                <p class="metric-desc" id="kpiIncomeCount">0 income transactions</p>
+              </div>
+              <div class="card-footer">
+                <span class="calc-strip" id="kpiIncomeTrend"><i data-lucide="minus"></i> No trend yet</span>
+              </div>
+            </div>
+
+            <!-- 3. Spending Card -->
+            <div class="card summary-card">
+              <div class="card-head">
+                <span class="card-label">Total Spending</span>
+                <span class="card-icon-badge orange"><i data-lucide="trending-down"></i></span>
+              </div>
+              <div class="card-body">
+                <div class="metric-value-wrap">
+                  <span class="metric-value text-orange" id="kpiSpending">$0.00</span>
+                </div>
+                <p class="metric-desc" id="kpiSpendingCount">0 expense transactions</p>
+              </div>
+              <div class="card-footer">
+                <span class="calc-strip" id="kpiSpendingTrend"><i data-lucide="minus"></i> No trend yet</span>
+              </div>
+            </div>
+
+            <!-- 4. Savings Rate Card -->
+            <div class="card summary-card">
+              <div class="card-head">
+                <span class="card-label">Savings Rate</span>
+                <span class="card-icon-badge blue"><i data-lucide="piggy-bank"></i></span>
+              </div>
+              <div class="card-body">
+                <div class="metric-value-wrap">
+                  <span class="metric-value text-blue" id="kpiSavingsRate">0.0%</span>
+                </div>
+                <p class="metric-desc">Formula: (Income − Spending) ÷ Income</p>
+              </div>
+              <div class="card-footer">
+                <span class="calc-strip" id="kpiSavingsNet">Net: $0.00 saved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-grid">
+            <!-- Cash Flow Chart -->
+            <div class="card chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Cash Flow</h3>
+                  <p class="chart-subtitle">Monthly income vs expenses over time</p>
+                </div>
+                <div class="chart-legend-custom">
+                  <span class="legend-chip"><span class="dot green"></span> Income</span>
+                  <span class="legend-chip"><span class="dot orange"></span> Spending</span>
+                </div>
+              </div>
+              <div class="chart-container" id="cashFlowChartContainer">
+                <canvas id="cashFlowCanvas"></canvas>
+                <div class="empty-chart-state" id="cashFlowEmpty">
+                  <i data-lucide="bar-chart-3"></i>
+                  <h4>No cash flow data</h4>
+                  <p>Import or add transactions to see cash flow.</p>
+                  <button class="btn btn-secondary btn-sm" onclick="document.getElementById('btnTopAddEntry').click()">
+                    <i data-lucide="plus"></i> Add transaction
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spending by Category Donut -->
+            <div class="card chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Spending by Category</h3>
+                  <p class="chart-subtitle">Expense distribution in selected period</p>
+                </div>
+              </div>
+              <div class="chart-container donut-layout" id="donutChartContainer">
+                <div class="donut-canvas-wrap">
+                  <canvas id="categoryDonutCanvas"></canvas>
+                  <div class="empty-chart-state" id="donutEmpty">
+                    <i data-lucide="pie-chart"></i>
+                    <h4>No expenses yet</h4>
+                    <p>Spend categories will appear here once recorded.</p>
+                  </div>
+                </div>
+                <div class="donut-legend-wrap" id="donutLegendList">
+                  <!-- Generated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Recent Activity & Finova Insights & Coming Up -->
+          <div class="dashboard-tri-grid">
+            <!-- Recent Activity (5 items) -->
+            <div class="card recent-activity-card">
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title">Recent Activity</h3>
+                  <p class="section-subtitle">Latest records in selected period</p>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="btnViewAllTransactions">
+                  <span>View all</span>
+                  <i data-lucide="chevron-right"></i>
+                </button>
+              </div>
+
+              <div class="recent-list" id="dashboardRecentList">
+                <!-- Dynamically populated or empty -->
+              </div>
+            </div>
+
+            <!-- Finova Insights & Coming Up -->
+            <div class="dashboard-side-col">
+              <!-- Insight Card -->
+              <div class="card insight-card">
+                <div class="card-head">
+                  <div class="insight-head-left">
+                    <span class="card-icon-badge purple-glow"><i data-lucide="sparkles"></i></span>
+                    <h3 class="section-title">Finova Insights</h3>
+                  </div>
+                </div>
+                <div class="insight-body" id="dashboardInsights">
+                  <div class="insight-item">
+                    <i data-lucide="shield-check" class="text-green"></i>
+                    <div>
+                      <strong>System Status: Active</strong>
+                      <p>Storage & duplicate detection active. Starting empty as specified.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coming Up (Recurring Due Soon) -->
+              <div class="card coming-up-card">
+                <div class="card-section-header">
+                  <div>
+                    <h3 class="section-title">Coming Up</h3>
+                    <p class="section-subtitle">Upcoming bills & renewals</p>
+                  </div>
+                  <button class="btn btn-link btn-sm" onclick="app.navigateToTab('recurring')">
+                    Manage
+                  </button>
+                </div>
+                <div class="coming-up-list" id="dashboardComingUpList">
+                  <!-- Populated or empty -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 2: TRANSACTIONS ================= -->
+        <section class="page-view" id="view-transactions">
+          <div class="view-loader"><div class="spinner"></div><span>Loading transactions...</span></div>
+          <div class="card table-wrapper-card">
+            <!-- Filter Toolbar -->
+            <div class="transactions-toolbar">
+              <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="txSearchInput" placeholder="Search merchant or category...">
+              </div>
+
+              <div class="filter-controls">
+                <!-- Shared Period Selector Dropdown -->
+                <div class="select-wrapper">
+                  <select id="txPeriodFilter">
+                    <option value="all-time">All time</option>
+                    <option value="this-week">This week</option>
+                    <option value="this-month">This month</option>
+                    <option value="this-year">This year</option>
+                  </select>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="select-wrapper">
+                  <select id="txCategoryFilter">
+                    <option value="">All Categories</option>
+                  </select>
+                </div>
+
+                <!-- Account Filter -->
+                <div class="select-wrapper">
+                  <select id="txAccountFilter">
+                    <option value="">All Accounts</option>
+                  </select>
+                </div>
+
+                <!-- Reset Filters -->
+                <button class="btn btn-ghost btn-sm" id="btnResetFilters" title="Clear all filters">
+                  <i data-lucide="x"></i>
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Table Header Stats -->
+            <div class="table-meta-bar">
+              <span id="txCountBadge">0 transactions</span>
+              <div class="table-meta-right">
+                <span id="txNetSum">Net: $0.00</span>
+              </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-responsive">
+              <table class="data-table" id="transactionsTable">
+                <thead>
+                  <tr>
+                    <th>Date & Merchant</th>
+                    <th>Category</th>
+                    <th>Account</th>
+                    <th>Receipt</th>
+                    <th class="text-right">Amount</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+
+              <!-- Empty Table State -->
+              <div class="empty-state-card" id="txEmptyState">
+                <i data-lucide="inbox"></i>
+                <h3>No transactions found</h3>
+                <p>No records match your selected period or filters.</p>
+                <div class="empty-actions">
+                  <button class="btn btn-secondary btn-sm" onclick="document.getElementById('btnTopImport').click()">
+                    <i data-lucide="file-up"></i> Import CSV
+                  </button>
+                  <button class="btn btn-primary btn-sm" onclick="document.getElementById('btnTopAddEntry').click()">
+                    <i data-lucide="plus"></i> Add transaction
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 3: RECURRING ================= -->
+        <section class="page-view" id="view-recurring">
+          <!-- Active Detection Status Banner -->
+          <div class="status-banner info">
+            <div class="banner-icon"><i data-lucide="zap"></i></div>
+            <div class="banner-content">
+              <strong>Active Detection Engine Running</strong>
+              <p>Analyzing real expense transactions for cadences (weekly, bi-weekly, monthly, quarterly, annual) with variance limits and noise protection.</p>
+            </div>
+          </div>
+
+          <!-- Detected Suggestions Panel -->
+          <div class="card mb-4" id="recurringSuggestionsCard">
+            <div class="card-section-header">
+              <div>
+                <h3 class="section-title">Detected Recurring Suggestions</h3>
+                <p class="section-subtitle">Patterns identified from your transactions. Confirm or ignore.</p>
+              </div>
+              <span class="badge badge-purple" id="recurringSuggestionsCount">0 suggestions</span>
+            </div>
+            <div class="suggestions-list" id="recurringSuggestionsList">
+              <!-- Dynamically populated or empty state -->
+            </div>
+          </div>
+
+          <!-- Summary Commitment Bar -->
+          <div class="summary-grid mb-4">
+            <div class="card summary-card">
+              <span class="card-label">Monthly Commitment</span>
+              <span class="metric-value text-purple" id="recurringMonthlyTotal">$0.00</span>
+              <p class="metric-desc">Combined confirmed & visible suggestions</p>
+            </div>
+            <div class="card summary-card">
+              <span class="card-label">Annual Commitment</span>
+              <span class="metric-value" id="recurringAnnualTotal">$0.00</span>
+              <p class="metric-desc">Estimated 12-month recurring obligation</p>
+            </div>
+            <div class="card summary-card">
+              <span class="card-label">Next Expected Payment</span>
+              <span class="metric-value text-orange" id="recurringNextDue">None scheduled</span>
+              <p class="metric-desc" id="recurringNextDueDesc">Add recurring payment to track</p>
+            </div>
+          </div>
+
+          <!-- Confirmed Recurring List -->
+          <div class="card">
+            <div class="card-section-header">
+              <div>
+                <h3 class="section-title">Confirmed Recurring Payments</h3>
+                <p class="section-subtitle">Active bills and recurring expenses</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="btnAddRecurring">
+                <i data-lucide="plus"></i> Add recurring payment
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Cadence</th>
+                    <th>Next Expected Date</th>
+                    <th>Account</th>
+                    <th>Monthly Equiv.</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="recurringTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+              <div class="empty-state-card" id="recurringEmptyState">
+                <i data-lucide="calendar-clock"></i>
+                <h3>No confirmed recurring payments</h3>
+                <p>Add a recurring payment or keep suggestions detected by the engine.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 4: SUBSCRIPTIONS ================= -->
+        <section class="page-view" id="view-subscriptions">
+          <!-- Detected Subscription Suggestions -->
+          <div class="card mb-4" id="subscriptionSuggestionsCard">
+            <div class="card-section-header">
+              <div>
+                <h3 class="section-title">Subscription Candidates</h3>
+                <p class="section-subtitle">Services identified via subscription hints (Netflix, Spotify, ChatGPT, Adobe, etc.)</p>
+              </div>
+              <span class="badge badge-purple" id="subSuggestionsCount">0 detected</span>
+            </div>
+            <div class="suggestions-list" id="subSuggestionsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Subscription Metrics -->
+          <div class="summary-grid mb-4">
+            <div class="card summary-card">
+              <span class="card-label">Monthly Subscriptions</span>
+              <span class="metric-value text-purple" id="subMonthlyTotal">$0.00</span>
+              <p class="metric-desc">Estimated monthly recurring cost</p>
+            </div>
+            <div class="card summary-card">
+              <span class="card-label">Annual Cost</span>
+              <span class="metric-value" id="subAnnualTotal">$0.00</span>
+              <p class="metric-desc">Annual cost for active services</p>
+            </div>
+            <div class="card summary-card">
+              <span class="card-label">Active Services</span>
+              <span class="metric-value text-blue" id="subActiveCount">0</span>
+              <p class="metric-desc">Tracked recurring subscriptions</p>
+            </div>
+            <div class="card summary-card">
+              <span class="card-label">Next Renewal</span>
+              <span class="metric-value text-orange" id="subNextRenewal">None</span>
+              <p class="metric-desc" id="subNextRenewalService">No upcoming renewal</p>
+            </div>
+          </div>
+
+          <!-- Confirmed Subscriptions Table -->
+          <div class="card">
+            <div class="card-section-header">
+              <div>
+                <h3 class="section-title">Active Subscriptions</h3>
+                <p class="section-subtitle">Your subscribed software, streaming, and memberships</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="btnAddSubscription">
+                <i data-lucide="plus"></i> Add subscription
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Service Name</th>
+                    <th>Category</th>
+                    <th>Billing Cycle</th>
+                    <th>Next Renewal</th>
+                    <th>Payment Account</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="subscriptionsTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+              <div class="empty-state-card" id="subEmptyState">
+                <i data-lucide="repeat"></i>
+                <h3>No subscriptions tracked</h3>
+                <p>Add a subscription manually or confirm detected candidates.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 5: BUDGETS ================= -->
+        <section class="page-view" id="view-budgets">
+          <!-- Budget Health Overview Header Card -->
+          <div class="card mb-4 budget-summary-card">
+            <div class="budget-summary-header">
+              <div>
+                <h3 class="section-title">Monthly Budget Health</h3>
+                <p class="section-subtitle">Real-time spend tracking for the active month</p>
+              </div>
+              <button class="btn btn-primary btn-sm" id="btnCreateBudget">
+                <i data-lucide="plus"></i> Create budget
+              </button>
+            </div>
+
+            <div class="budget-stat-pills">
+              <div class="budget-pill">
+                <span class="pill-title">Total Budget</span>
+                <span class="pill-value" id="budgetTotalLimit">$0.00</span>
+              </div>
+              <div class="budget-pill">
+                <span class="pill-title">Total Spent</span>
+                <span class="pill-value text-orange" id="budgetTotalSpent">$0.00</span>
+              </div>
+              <div class="budget-pill">
+                <span class="pill-title">Remaining</span>
+                <span class="pill-value text-green" id="budgetTotalRemaining">$0.00</span>
+              </div>
+              <div class="budget-pill">
+                <span class="pill-title">Overall Health</span>
+                <span class="pill-value" id="budgetHealthPercent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget Cards Grid -->
+          <div class="budgets-grid" id="budgetsGrid">
+            <!-- Dynamically populated or empty state -->
+          </div>
+
+          <div class="empty-state-card" id="budgetsEmptyState">
+            <i data-lucide="pie-chart"></i>
+            <h3>No budgets set up yet</h3>
+            <p>Set monthly spending caps on categories like Groceries, Dining, and Shopping.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('btnCreateBudget').click()">
+              <i data-lucide="plus"></i> Create your first budget
+            </button>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 6: GOALS ================= -->
+        <section class="page-view" id="view-goals">
+          <div class="card-section-header mb-4">
+            <div>
+              <h3 class="section-title">Savings & Financial Goals</h3>
+              <p class="section-subtitle">Track targets like emergency funds, trips, and milestones</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnCreateGoal">
+              <i data-lucide="plus"></i> Create goal
+            </button>
+          </div>
+
+          <!-- Goals Grid -->
+          <div class="goals-grid" id="goalsGrid">
+            <!-- Dynamically populated -->
+          </div>
+
+          <div class="empty-state-card" id="goalsEmptyState">
+            <i data-lucide="target"></i>
+            <h3>No savings goals created</h3>
+            <p>Build wealth with clear savings targets for emergency funds or big plans.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('btnCreateGoal').click()">
+              <i data-lucide="plus"></i> Set a goal
+            </button>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 7: DOCUMENTS ================= -->
+        <section class="page-view" id="view-documents">
+          <div class="docs-hero-grid mb-4">
+            <!-- Card 1: Upload Documents -->
+            <div class="card doc-action-card">
+              <div class="doc-card-head">
+                <div class="card-icon-badge violet"><i data-lucide="upload-cloud"></i></div>
+                <div>
+                  <h3 class="section-title">Upload Documents</h3>
+                  <p class="section-subtitle">Receipts, invoices, bank statements, PDFs, images (max 20MB)</p>
+                </div>
+              </div>
+              <div class="upload-dropzone" id="documentDropzone">
+                <i data-lucide="file-plus" class="dropzone-icon"></i>
+                <p class="dropzone-text">Drag & drop files here, or <span>browse</span></p>
+                <input type="file" id="docFileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.csv,.xlsx" style="display:none;">
+              </div>
+            </div>
+
+            <!-- Card 2: Google Drive Inbox -->
+            <div class="card doc-action-card">
+              <div class="doc-card-head">
+                <div class="card-icon-badge blue"><i data-lucide="cloud"></i></div>
+                <div>
+                  <h3 class="section-title">Google Drive Inbox</h3>
+                  <p class="section-subtitle">Dedicated folder: <strong class="text-purple">Finova Financial Inbox</strong></p>
+                </div>
+              </div>
+              <div class="drive-info-box">
+                <div class="drive-meta-row">
+                  <span>Schedule:</span>
+                  <strong class="badge badge-purple">Daily at 8:00 AM</strong>
+                </div>
+                <div class="drive-meta-row">
+                  <span>Last Sync:</span>
+                  <span id="docDriveLastSync">Not synced yet</span>
+                </div>
+                <div class="drive-meta-row">
+                  <span>Status:</span>
+                  <span class="badge badge-green" id="docDriveStatusBadge">Connected</span>
+                </div>
+              </div>
+              <div class="drive-card-actions">
+                <button class="btn btn-secondary btn-sm" id="btnDocTriggerDriveSync">
+                  <i data-lucide="refresh-cw"></i> Sync Inbox Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Document Vault Table -->
+          <div class="card">
+            <div class="card-section-header">
+              <div>
+                <h3 class="section-title">Secure Document Vault</h3>
+                <p class="section-subtitle">All stored statements and receipts (Cloudflare R2 storage)</p>
+              </div>
+              <span class="badge badge-neutral" id="docVaultCount">0 documents</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Filename</th>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Source</th>
+                    <th>Status</th>
+                    <th>Imported Date</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="documentTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+
+              <div class="empty-state-card" id="docEmptyState">
+                <i data-lucide="folder-open"></i>
+                <h3>No documents yet</h3>
+                <p>Upload a file or add one to your Drive inbox.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE 9: SETTINGS ================= -->
+        <section class="page-view" id="view-settings">
+          <div class="settings-stack">
+            <div class="card settings-card">
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title">Preferences</h3>
+                  <p class="section-subtitle">Language and currency used across the app</p>
+                </div>
+              </div>
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="settingLanguage">Language</label>
+                  <select id="settingLanguage">
+                    
+                    
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="settingCurrency">Currency</label>
+                  <select id="settingCurrency"></select>
+                  <span class="form-helper">Changing currency only changes the symbol; amounts are not converted.</span>
+                </div>
+              </div>
+
+              <div class="live-rates-info-box" id="settingsLiveRatesBox">
+                <div class="live-rates-status-row">
+                  <div class="live-rates-status-left">
+                    <span class="live-pulse-dot"></span>
+                    <strong>Real-Time API:</strong>
+                    <span class="badge badge-green" id="settingsApiStatus">Connected &bull; open.er-api.com</span>
+                  </div>
+                  <span class="text-muted text-xs" id="settingsRatesUpdated">Checking...</span>
+                </div>
+                <div class="live-rates-preview-row">
+                  <span>Live Exchange Rate:</span>
+                  <strong class="text-primary font-mono" id="settingsActiveRatePreview">1 USD = 58.45 PHP</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 16.1: Net Worth Setup -->
+            <div class="card settings-card">
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title">Net Worth Configuration</h3>
+                  <p class="section-subtitle">Assets minus liabilities. Net Worth is configured here, not from monthly cash flow.</p>
+                </div>
+              </div>
+
+              <div class="net-worth-form">
+                <div class="form-row-2col">
+                  <div class="form-group">
+                    <label for="settingAssetsInput" data-cur-label>Total Assets ($)</label>
+                    <input type="number" step="0.01" min="0" id="settingAssetsInput" placeholder="0.00">
+                    <span class="form-helper">Checking, savings, investments, property, vehicles.</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="settingLiabilitiesInput" data-cur-label>Total Liabilities ($)</label>
+                    <input type="number" step="0.01" min="0" id="settingLiabilitiesInput" placeholder="0.00">
+                    <span class="form-helper">Mortgages, credit card balances, student or auto loans.</span>
+                  </div>
+                </div>
+
+                <div class="net-worth-preview-box">
+                  <span class="preview-label">Calculated Net Worth Preview:</span>
+                  <span class="preview-value" id="settingsNetWorthPreview">$0.00</span>
+                </div>
+
+                <div class="form-actions-right">
+                  <button class="btn btn-primary" id="btnSaveNetWorth">
+                    <i data-lucide="check"></i> Save Net Worth
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 16.2: Categories & Accounts -->
+            <div class="settings-grid-2col">
+              <!-- Managed Categories -->
+              <div class="card settings-card">
+                <div class="card-section-header">
+                  <div>
+                    <h3 class="section-title">Managed Categories</h3>
+                    <p class="section-subtitle">Starter or custom category definitions</p>
+                  </div>
+                </div>
+                <div class="item-input-row">
+                  <input type="text" id="newCategoryInput" placeholder="Category name...">
+                  <button class="btn btn-secondary btn-sm" id="btnAddCategory">Add</button>
+                </div>
+                <div class="item-chip-list" id="settingsCategoriesList">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <!-- Managed Accounts -->
+              <div class="card settings-card">
+                <div class="card-section-header">
+                  <div>
+                    <h3 class="section-title">Managed Accounts</h3>
+                    <p class="section-subtitle">Account selector lookup definitions</p>
+                  </div>
+                </div>
+                <div class="item-input-row">
+                  <input type="text" id="newAccountInput" placeholder="Account name...">
+                  <button class="btn btn-secondary btn-sm" id="btnAddAccount">Add</button>
+                </div>
+                <div class="item-chip-list" id="settingsAccountsList">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 16.3: Automatic Detection Settings -->
+            <div class="card settings-card" data-admin-only>
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title">Automatic Detection Settings</h3>
+                  <p class="section-subtitle">Recurring cadence and subscription detection parameters</p>
+                </div>
+              </div>
+              <div class="detection-info-box">
+                <p>The engine requires at least 2 unique transaction dates for candidate grouping and checks strict intervals (weekly, biweekly, monthly, quarterly, annual). Merchants without known hints require 3+ occurrences with &le;3% variance.</p>
+                <div class="detection-stats-row">
+                  <span>Ignored Patterns: <strong id="ignoredPatternsCount">0</strong></span>
+                  <button class="btn btn-secondary btn-sm" id="btnRestoreIgnoredPatterns">
+                    <i data-lucide="rotate-ccw"></i> Restore ignored suggestions
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 16.4: Google Drive Sync Settings -->
+            <div class="card settings-card" data-admin-only>
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title">Google Drive Sync Configuration</h3>
+                  <p class="section-subtitle">Automated sync bridge with dedicated folder</p>
+                </div>
+              </div>
+              <div class="drive-settings-details">
+                <div class="meta-item">
+                  <span class="meta-label">Dedicated Folder:</span>
+                  <span class="meta-val"><strong>Finova Financial Inbox</strong></span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Automation Schedule:</span>
+                  <span class="meta-val">Daily at 08:00 AM (local timezone)</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Sync Strategy:</span>
+                  <span class="meta-val">Reads unparsed files, enforces SHA/fingerprint deduplication, keeps files untouched.</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Last Sync Status:</span>
+                  <span class="badge badge-green" id="settingsDriveStatus">Success (Inbox checked)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 16.5: Account Termination (Admin Only) -->
+            <div class="card settings-card" data-admin-only>
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title text-danger">Account Termination</h3>
+                  <p class="section-subtitle">Permanently block user accounts from accessing their data</p>
+                </div>
+              </div>
+              <div class="termination-list" id="settingsTerminationList">
+                <!-- Dynamically populated by renderSettings() -->
+                <div class="empty-state-card"><i data-lucide="users"></i><h3>No user accounts</h3><p>Terminated or deactivated accounts appear here.</p></div>
+              </div>
+            </div>
+
+            <!-- Section 16.6: Danger Zone -->
+            <div class="card settings-card danger-card" data-admin-only>
+              <div class="card-section-header">
+                <div>
+                  <h3 class="section-title text-danger">Danger Zone</h3>
+                  <p class="section-subtitle">Irreversible administrative actions</p>
+                </div>
+              </div>
+              <div class="danger-box">
+                <div>
+                  <strong>Erase all Finova data</strong>
+                  <p>Permanently deletes all transactions, documents, budgets, goals, and resets Net Worth to unconfigured.</p>
+                </div>
+                <button class="btn btn-danger" id="btnOpenWipeModal">
+                  <i data-lucide="trash-2"></i> Wipe All Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PAGE: ADMIN DASHBOARD ================= -->
+        <section class="page-view" id="view-admin-dashboard"><div id="adminRoot-admin-dashboard"></div></section>
+
+        <!-- ================= PAGE: ADMIN USERS ================= -->
+        <section class="page-view" id="view-admin-users"><div id="adminRoot-admin-users"></div></section>
+
+        <!-- ================= PAGE: ADMIN BUDGETS ================= -->
+        <section class="page-view" id="view-admin-budgets"><div id="adminRoot-admin-budgets"></div></section>
+
+        <!-- ================= PAGE: ADMIN TRANSACTIONS ================= -->
+        <section class="page-view" id="view-admin-transactions"><div id="adminRoot-admin-transactions"></div></section>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal 1: Add / Edit Transaction Entry -->
+  <div class="modal-backdrop" id="modalAddEntry">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="entryModalTitle">Add Transaction</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <form id="formAddEntry" class="modal-body">
+        <input type="hidden" id="entryTxId">
+
+        <!-- Type Segmented Control -->
+        <div class="segmented-control mb-3">
+          <button type="button" class="segment-btn active" data-type="expense" id="segmentExpense">Expense</button>
+          <button type="button" class="segment-btn" data-type="income" id="segmentIncome">Income</button>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="entryAmount" data-cur-label>Amount ($) *</label>
+          <input type="number" step="0.01" min="0.01" id="entryAmount" required placeholder="0.00" class="input-lg">
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="entryMerchant">Merchant or Source *</label>
+          <input type="text" id="entryMerchant" required placeholder="e.g. Trader Joe's, Employer Payroll">
+        </div>
+
+        <div class="form-row-2col mb-3">
+          <div class="form-group">
+            <label for="entryDate">Date *</label>
+            <input type="date" id="entryDate" required>
+          </div>
+          <div class="form-group">
+            <label for="entryCategory">Category</label>
+            <select id="entryCategory" required>
+              <!-- Filled from categories -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="entryAccount">Account</label>
+          <select id="entryAccount" required>
+            <!-- Filled from accounts -->
+          </select>
+        </div>
+
+        <!-- Receipt checkbox -->
+        <div class="form-check mb-3">
+          <input type="checkbox" id="entryHasReceipt">
+          <label for="entryHasReceipt">I have a receipt or invoice to attach</label>
+        </div>
+
+        <div class="receipt-upload-box mb-3" id="entryReceiptUploadBox" style="display: none;">
+          <input type="file" id="entryReceiptFile" accept="image/*,.pdf">
+          <span class="form-helper">Stored safely in document vault</span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveEntry">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Import Modal (CSV & Documents) -->
+  <div class="modal-backdrop" id="modalImport">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">Import Statements & Documents</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="segmented-control mb-4">
+          <button type="button" class="segment-btn active" id="importTabCsv">CSV Statement</button>
+          <button type="button" class="segment-btn" id="importTabDocs">Receipts & Invoices</button>
+        </div>
+
+        <!-- Tab 1: CSV Statement Import -->
+        <div id="importCsvSection">
+          <div class="upload-dropzone mb-3" id="csvDropzone">
+            <i data-lucide="file-spreadsheet" class="dropzone-icon"></i>
+            <p>Select or drag your bank or credit card <strong>CSV statement</strong></p>
+            <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+          </div>
+
+          <div id="csvPreviewSection" style="display:none;">
+            <div class="alert alert-info mb-3">
+              <i data-lucide="check-circle-2"></i>
+              <span id="csvDetectedMsg">CSV file loaded. Verify detected column mappings:</span>
+            </div>
+
+            <div class="mapping-grid mb-3">
+              <div class="form-group">
+                <label>Date Column</label>
+                <select id="mapColDate"></select>
+              </div>
+              <div class="form-group">
+                <label>Merchant / Description</label>
+                <select id="mapColMerchant"></select>
+              </div>
+              <div class="form-group">
+                <label>Amount Column</label>
+                <select id="mapColAmount"></select>
+              </div>
+              <div class="form-group">
+                <label>Category (optional)</label>
+                <select id="mapColCategory"></select>
+              </div>
+              <div class="form-group">
+                <label>Account</label>
+                <select id="mapColAccount"></select>
+              </div>
+            </div>
+
+            <div class="preview-table-box mb-3">
+              <span class="preview-title">Statement Preview (first 4 rows):</span>
+              <table class="preview-table" id="csvPreviewTable"></table>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100" id="btnExecuteCsvImport">
+              <i data-lucide="download"></i> Import Statement Rows
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Document / Receipt Upload -->
+        <div id="importDocSection" style="display:none;">
+          <div class="upload-dropzone mb-3" id="importModalDocDropzone">
+            <i data-lucide="receipt" class="dropzone-icon"></i>
+            <p>Upload receipts, invoices or PDFs for intelligent extraction</p>
+            <input type="file" id="importModalDocInput" multiple accept=".pdf,.png,.jpg,.jpeg,.csv" style="display:none;">
+          </div>
+          <p class="form-helper">Extracts grounded merchant, date, and amount. Uncertain items are marked for review.</p>
+        </div>
+
+        <!-- Import Result Report Banner -->
+        <div class="import-result-card" id="importResultCard" style="display:none;">
+          <h4 id="importResultTitle">Import Complete</h4>
+          <div class="result-stats-row">
+            <div class="result-stat"><span id="resCountInserted" class="stat-num text-green">0</span><span class="stat-lbl">Imported</span></div>
+            <div class="result-stat"><span id="resCountDupes" class="stat-num text-orange">0</span><span class="stat-lbl">Duplicates Skipped</span></div>
+            <div class="result-stat"><span id="resCountReview" class="stat-num text-blue">0</span><span class="stat-lbl">For Review</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Drive Sync Modal -->
+  <div class="modal-backdrop" id="modalDriveSync">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Google Drive Inbox Sync</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="drive-sync-header mb-3">
+          <div class="card-icon-badge blue"><i data-lucide="cloud"></i></div>
+          <div>
+            <strong>Finova Financial Inbox</strong>
+            <p class="text-muted">Automated bridge to Google Drive</p>
+          </div>
+        </div>
+
+        <div class="sync-status-details mb-3">
+          <p>The daily ChatGPT Work automation runs at <strong>8:00 AM daily</strong>, fetching statements & receipts dropped into your folder without modifying your Drive files.</p>
+          <div class="sync-info-pills">
+            <div class="pill"><span class="lbl">Last Sync:</span> <strong id="driveModalLastSync">Never</strong></div>
+            <div class="pill"><span class="lbl">Duplicates Filter:</span> <strong>SHA Fingerprint</strong></div>
+          </div>
+        </div>
+
+        <div class="sync-action-box">
+          <button type="button" class="btn btn-primary w-100" id="btnRunDriveSyncNow">
+            <i data-lucide="refresh-cw"></i> Check & Sync Drive Inbox Now
+          </button>
+        </div>
+
+        <div class="sync-results-log mt-3" id="driveSyncResultsBox" style="display:none;">
+          <div class="alert alert-success">
+            <i data-lucide="check-circle-2"></i>
+            <span id="driveSyncMsg">Inbox synced successfully. All new records added.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Add / Edit Budget -->
+  <div class="modal-backdrop" id="modalBudget">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="budgetModalTitle">Create Monthly Budget</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <form id="formBudget" class="modal-body">
+        <input type="hidden" id="budgetId">
+        <div class="form-group mb-3">
+          <label for="budgetCategorySelect">Category *</label>
+          <select id="budgetCategorySelect" required></select>
+        </div>
+        <div class="form-group mb-3">
+          <label for="budgetLimitInput" data-cur-label>Monthly Spending Limit ($) *</label>
+          <input type="number" step="1" min="1" id="budgetLimitInput" required placeholder="500">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 6: Add / Edit Goal -->
+  <div class="modal-backdrop" id="modalGoal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="goalModalTitle">Create Savings Goal</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <form id="formGoal" class="modal-body">
+        <input type="hidden" id="goalId">
+        <div class="form-group mb-3">
+          <label for="goalNameInput">Goal Name *</label>
+          <input type="text" id="goalNameInput" required placeholder="e.g. Emergency Fund, Japan Trip">
+        </div>
+        <div class="form-group mb-3">
+          <label for="goalTargetInput" data-cur-label>Target Amount ($) *</label>
+          <input type="number" step="1" min="1" id="goalTargetInput" required placeholder="5000">
+        </div>
+        <div class="form-group mb-3">
+          <label for="goalCurrentInput" data-cur-label>Current Saved ($)</label>
+          <input type="number" step="1" min="0" id="goalCurrentInput" placeholder="0">
+        </div>
+        <div class="form-group mb-3">
+          <label for="goalDateInput">Target Date (optional)</label>
+          <input type="date" id="goalDateInput">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 7: Add / Edit Recurring Payment -->
+  <div class="modal-backdrop" id="modalRecurring">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="recurringModalTitle">Add Recurring Payment</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <form id="formRecurring" class="modal-body">
+        <input type="hidden" id="recurringId">
+        <div class="form-group mb-3">
+          <label for="recNameInput">Name / Payee *</label>
+          <input type="text" id="recNameInput" required placeholder="e.g. Rent, Mortgage, Car Loan, Electric">
+        </div>
+        <div class="form-row-2col mb-3">
+          <div class="form-group">
+            <label for="recAmountInput" data-cur-label>Amount ($) *</label>
+            <input type="number" step="0.01" min="0.01" id="recAmountInput" required placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label for="recCadenceSelect">Cadence *</label>
+            <select id="recCadenceSelect" required>
+              <option value="weekly">Weekly</option>
+              <option value="biweekly">Bi-weekly</option>
+              <option value="monthly" selected>Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2col mb-3">
+          <div class="form-group">
+            <label for="recCategorySelect">Category</label>
+            <select id="recCategorySelect"></select>
+          </div>
+          <div class="form-group">
+            <label for="recNextDateInput">Next Expected Date *</label>
+            <input type="date" id="recNextDateInput" required>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="recAccountSelect">Payment Account</label>
+          <select id="recAccountSelect"></select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Recurring Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 8: Add / Edit Subscription -->
+  <div class="modal-backdrop" id="modalSubscription">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="subModalTitle">Add Subscription</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <form id="formSubscription" class="modal-body">
+        <input type="hidden" id="subId">
+        <div class="form-group mb-3">
+          <label for="subNameInput">Service Name *</label>
+          <input type="text" id="subNameInput" required placeholder="e.g. Netflix, Spotify, ChatGPT Plus, iCloud">
+        </div>
+        <div class="form-row-2col mb-3">
+          <div class="form-group">
+            <label for="subAmountInput" data-cur-label>Amount ($) *</label>
+            <input type="number" step="0.01" min="0.01" id="subAmountInput" required placeholder="14.99">
+          </div>
+          <div class="form-group">
+            <label for="subCadenceSelect">Billing Cycle *</label>
+            <select id="subCadenceSelect" required>
+              <option value="monthly" selected>Monthly</option>
+              <option value="annual">Annual</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2col mb-3">
+          <div class="form-group">
+            <label for="subCategorySelect">Category</label>
+            <select id="subCategorySelect"></select>
+          </div>
+          <div class="form-group">
+            <label for="subNextDateInput">Next Renewal Date *</label>
+            <input type="date" id="subNextDateInput" required>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="subAccountSelect">Account</label>
+          <select id="subAccountSelect"></select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Subscription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 10: Complete Data Wipe Confirmation (Section 16.5) -->
+  <div class="modal-backdrop" id="modalWipe">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title text-danger"><i data-lucide="alert-triangle"></i> Erase All Finova Data</h3>
+        <button class="modal-close" data-close-modal><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">This action will permanently delete all transactions, stored documents, budgets, goals, and reset net worth.</p>
+        <p class="mb-3 text-muted"><strong>Original Google Drive files will remain safe.</strong></p>
+        <div class="form-group mb-3">
+          <label for="wipeConfirmInput">Type <strong class="text-danger">DELETE</strong> to confirm:</label>
+          <input type="text" id="wipeConfirmInput" placeholder="DELETE" autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-danger" id="btnExecuteDataWipe" disabled>
+          Erase All Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========== Finova AI Chatbot ========== -->
+  <div class="chatbot-wrap" id="chatbotWrap">
+    <!-- Panel -->
+    <div class="chatbot-panel" id="chatbotPanel">
+      <div class="chatbot-header">
+        <div class="chatbot-header-left">
+          <div class="chatbot-avatar"><i data-lucide="bot"></i></div>
+          <div>
+            <div class="chatbot-title">Finova AI</div>
+            <div class="chatbot-status"><span class="chatbot-dot"></span>Online</div>
+          </div>
+        </div>
+        <button class="chatbot-close" id="chatbotClose" title="Close"><i data-lucide="x"></i></button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-msg bot">
+          <div class="chatbot-bubble">👋 Hi! I'm your Finova AI assistant. Ask me anything about your finances!<br><br>
+            <span class="chatbot-suggestion" onclick="chatbotAsk('What is my total spending?')">💸 Total spending</span>
+            <span class="chatbot-suggestion" onclick="chatbotAsk('Show my top categories')">📊 Top categories</span>
+            <span class="chatbot-suggestion" onclick="chatbotAsk('How are my budgets?')">🎯 Budget status</span>
+            <span class="chatbot-suggestion" onclick="chatbotAsk('Show my goals')">🏆 My goals</span>
+          </div>
+        </div>
+      </div>
+      <div class="chatbot-input-row">
+        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Ask about your finances…" autocomplete="off">
+        <button class="chatbot-send" id="chatbotSend"><i data-lucide="send"></i></button>
+      </div>
+    </div>
+    <!-- Toggle Bubble -->
+    <button class="chatbot-bubble-btn" id="chatbotToggle" title="Finova AI">
+      <i data-lucide="bot" class="chatbot-bubble-icon-open"></i>
+      <i data-lucide="x" class="chatbot-bubble-icon-close"></i>
+    </button>
+  </div>
+
+  <!-- App Core Script -->
+  <!-- Supabase cloud integration -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
